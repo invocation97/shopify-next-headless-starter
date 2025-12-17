@@ -1,17 +1,17 @@
 import { z } from "zod";
 
 export const StoreConfigSchema = z.object({
-  /** Shopify Storefront API version */
-  apiVersion: z.string().default("2025-10"),
+    /** Shopify Storefront API version */
+    apiVersion: z.string().default("2025-10"),
 
-  /** Handle of the collection used for /products */
-  allProductsCollectionHandle: z.string().default("all"),
+    /** Handle of the collection used for /products */
+    allProductsCollectionHandle: z.string().default("all-products"),
 
-  /** Products per page */
-  productsPerPage: z.coerce.number().int().min(1).max(48).default(24),
+    /** Products per page */
+    productsPerPage: z.coerce.number().int().min(1).max(48).default(24),
 
-  /** Enable product facets (filters) */
-  enableFacets: z.coerce.boolean().default(true),
+    /** Enable product facets (filters) */
+    enableFacets: z.coerce.boolean().default(true),
 });
 
 export type StoreConfig = z.infer<typeof StoreConfigSchema>;
