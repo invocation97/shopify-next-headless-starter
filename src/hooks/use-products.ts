@@ -17,6 +17,7 @@ import { useMemo } from "react";
 type UseProductsParams = {
     collectionHandle?: string;
     enabled?: boolean;
+    initialSearchParams?: string;
 };
 
 type ProductsResponse = NonNullable<
@@ -26,6 +27,7 @@ type ProductsResponse = NonNullable<
 export function useProducts({
     collectionHandle = storeConfig.allProductsCollectionHandle,
     enabled = true,
+    initialSearchParams,
 }: UseProductsParams = {}) {
     const [filterState, setFilterState] = useQueryStates(
         {
@@ -44,8 +46,8 @@ export function useProducts({
     const searchParams = useSearchParams();
 
     const searchParamsString = useMemo(() => {
-        return searchParams.toString();
-    }, [searchParams]);
+        return initialSearchParams ?? searchParams.toString();
+    }, [searchParams, initialSearchParams]);
 
     const query = useQuery<ProductsResponse, Error>({
         queryKey: ["products", collectionHandle, searchParamsString],
@@ -75,8 +77,8 @@ export function useProducts({
             return response.json();
         },
         enabled,
-        staleTime: 1000 * 60, // 1 minute
-        gcTime: 1000 * 60 * 5, // 5 minutes
+        staleTime: 60_000,
+        gcTime: 300_000,
     });
 
     return {
