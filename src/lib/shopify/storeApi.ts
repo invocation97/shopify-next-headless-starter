@@ -1,12 +1,14 @@
 import "server-only";
 import { createStorefrontApiClient } from "@shopify/storefront-api-client";
-import env from "@/lib/env";
+import {env} from "@/lib/env";
+import { storeConfig } from "@/config/store";
 
-const storeDomain = `https://${env.SHOPIFY_API_URL}.myshopify.com`;
-const apiVersion = env.SHOPIFY_API_VERSION ?? "2025-10";
+const storeDomain = `https://${env.SHOPIFY_STORE_DOMAIN}`;
+const apiVersion = storeConfig.apiVersion;
+const privateAccessToken = env.SHOPIFY_STOREFRONT_PRIVATE_TOKEN;
 
 export const storeApi = createStorefrontApiClient({
   storeDomain,
   apiVersion,
-  privateAccessToken: env.SHOPIFY_API_KEY,
+  privateAccessToken,
 });
