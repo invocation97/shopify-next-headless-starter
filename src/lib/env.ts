@@ -1,14 +1,13 @@
-const env = {
-    /* General */
-    NODE_ENV: process.env.NODE_ENV!,
+import { z } from "zod";
 
-    /* Shopify */
-    SHOPIFY_API_KEY: process.env.SHOPIFY_API_KEY!,
-    SHOPIFY_API_SECRET: process.env.SHOPIFY_API_SECRET!,
-    SHOPIFY_API_URL: process.env.SHOPIFY_API_URL!,
-    SHOPIFY_API_VERSION: process.env.SHOPIFY_API_VERSION!,
-    SHOPIFY_STOREFRONT_PUBLIC_TOKEN: process.env.SHOPIFY_STOREFRONT_PUBLIC_TOKEN!,
-}
+const EnvSchema = z.object({
+  NODE_ENV: z.string().default("development"),
 
+  SHOPIFY_STORE_DOMAIN: z.string().min(1),
+  SHOPIFY_STOREFRONT_API_VERSION: z.string().default("2025-10"),
 
-export default env;
+  SHOPIFY_STOREFRONT_PUBLIC_TOKEN: z.string().min(1),
+  SHOPIFY_STOREFRONT_PRIVATE_TOKEN: z.string().min(1),
+});
+
+export const env = EnvSchema.parse(process.env);
