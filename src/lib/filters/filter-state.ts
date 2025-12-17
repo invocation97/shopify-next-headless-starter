@@ -111,13 +111,14 @@ export function buildProductFiltersFromState(facets: Filter[], state: FilterStat
     }
 
     for (const facet of facets) {
-        const selectedValueIds = state.selected[facet.id];
+        const selectedValueLabels = state.selected[facet.id];
 
-        if (!selectedValueIds?.length) continue;
+        if (!selectedValueLabels?.length) continue;
 
         if (facet.type === "LIST") {
-            for (const valueId of selectedValueIds) {
-                const val = facet.values.find((v) => v.id === valueId);
+            // Match by label since /api/filters uses labels as values
+            for (const valueLabel of selectedValueLabels) {
+                const val = facet.values.find((v) => v.label === valueLabel);
                 if (!val) continue;
                 const parsed = parseFilterInput(val.input);
                 if (parsed) {
