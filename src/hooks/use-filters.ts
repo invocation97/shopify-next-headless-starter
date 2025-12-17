@@ -1,36 +1,32 @@
 import { storeConfig } from "@/config/store";
-import { Filter } from "@/lib/shopify/types/storefront.types";
+import { DynamicFilterConfig } from "@/lib/shopify/filter-options";
 import { useQuery } from "@tanstack/react-query";
 
-type UseFacetsParams = {
+type UseFiltersParams = {
     collectionHandle?: string;
     enabled?: boolean;
 };
 
-type FacetsResponse = {
-    filters: Filter[];
-};
-
-export function useFacets({
+export function useFilters({
     collectionHandle = storeConfig.allProductsCollectionHandle,
     enabled = true,
-}: UseFacetsParams = {}) {
-    return useQuery<FacetsResponse, Error>({
-        queryKey: ["facets", collectionHandle],
+}: UseFiltersParams = {}) {
+    return useQuery<DynamicFilterConfig[], Error>({
+        queryKey: ["filters", collectionHandle],
         queryFn: async () => {
             const params = new URLSearchParams();
             if (collectionHandle !== storeConfig.allProductsCollectionHandle) {
                 params.set("collectionHandle", collectionHandle);
             }
 
-            const response = await fetch(`/api/facets?${params.toString()}`);
+            const response = await fetch(`/api/filters?${params.toString()}`);
             if (!response.ok) {
-                throw new Error(`Failed to fetch facets: ${response.statusText}`);
+                throw new Error(`Failed to fetch filters: ${response.statusText}`);
             }
             return response.json();
         },
         enabled: enabled && storeConfig.enableFacets,
-        staleTime: 3_600_000,
-        gcTime: 86_400_000,
+        staleTime: 3_600_000, // 1 hour
+        gcTime: 86_400_000, // 24 hours
     });
 }

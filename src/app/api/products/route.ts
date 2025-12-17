@@ -4,6 +4,7 @@ import { getCollectionFacets } from "@/lib/shopify/server/facets";
 import { getCollectionProducts } from "@/lib/shopify/server/products";
 import { CollectionProductsQuery } from "@/lib/shopify/types/storefront.generated";
 import { ProductCollectionSortKeys } from "@/lib/shopify/types/storefront.types";
+import { mapCollectionProductsToResponse } from "@/lib/utils/mappers";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
@@ -13,9 +14,11 @@ const ProductsRequestSchema = z.object({
     searchParams: z.string().optional(),
 });
 
-type ProductsResponse = NonNullable<
+type CollectionProductsResponse = NonNullable<
     CollectionProductsQuery["collection"]
 >["products"];
+
+type ProductsResponse = ReturnType<typeof mapCollectionProductsToResponse>;
 
 export async function POST(req: NextRequest) {
     try {
@@ -37,14 +40,16 @@ export async function POST(req: NextRequest) {
             ? buildProductFiltersFromState(facets, state)
             : [];
 
-        const products = await getCollectionProducts({
+        const productsData = await getCollectionProducts({
             handle: collectionHandle,
             first,
             after: state.after,
             filters: filters.length ? filters : undefined,
             sortKey: state.sortKey as ProductCollectionSortKeys | undefined,
             reverse: state.reverse,
-        }) as ProductsResponse;
+        }) as CollectionProductsResponse;
+
+        const products = mapCollectionProductsToResponse(productsData);
 
         return NextResponse.json<ProductsResponse>(products, {
             headers: {

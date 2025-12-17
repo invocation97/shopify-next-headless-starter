@@ -3,7 +3,10 @@ import { storeConfig } from "@/config/store";
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
 import { Product } from "@/lib/shopify/types/storefront.types";
 
-type ProductsPageProps = {
+type CollectionPageProps = {
+    params: Promise<{
+        slug: string;
+    }>;
     searchParams: Promise<{
         [key: string]: string | string[] | undefined;
     }>;
@@ -19,9 +22,11 @@ type ProductsResponse = {
     };
 };
 
-export default async function ProductsPage({
+export default async function CollectionPage({
+    params,
     searchParams
-}: ProductsPageProps) {
+}: CollectionPageProps) {
+    const { slug } = await params;
     const searchParamsObj = await searchParams;
     const searchParamsString = new URLSearchParams(
         Object.entries(searchParamsObj).flatMap(([key, value]) => {
@@ -32,7 +37,7 @@ export default async function ProductsPage({
         })
     ).toString();
 
-    const collectionHandle = storeConfig.allProductsCollectionHandle;
+    const collectionHandle = slug;
     const queryClient = new QueryClient();
 
     await queryClient.prefetchQuery<ProductsResponse, Error>({
