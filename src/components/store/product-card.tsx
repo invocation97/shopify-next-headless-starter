@@ -20,7 +20,7 @@ export function ProductCard({ product, fetchPriority = "auto", className }: Prod
         <Card className={`flex h-full flex-col overflow-hidden ${className || ""}`}>
             <Link href={`/products/${product.handle}`} className="group">
                 <CardContent className="p-0">
-                    <div className="relative aspect-square overflow-hidden rounded-t-lg bg-muted">
+                    <div className="relative aspect-square overflow-hidden rounded-t-lg">
                         {product.featuredImage ? (
                             <Image
                                 src={product.featuredImage.url || "/placeholder.svg"}
