@@ -1,7 +1,7 @@
 "use client";
 
 import { storeConfig } from "@/config/store";
-import { CollectionProductsQuery } from "@/lib/shopify/types/storefront.generated";
+import { Product } from "@/lib/shopify/types/storefront.types";
 import { useQuery } from "@tanstack/react-query";
 import { useQueryStates } from "nuqs";
 import {
@@ -20,9 +20,15 @@ type UseProductsParams = {
     initialSearchParams?: string;
 };
 
-type ProductsResponse = NonNullable<
-    CollectionProductsQuery["collection"]
->["products"];
+type ProductsResponse = {
+    products: Product[];
+    pageInfo: {
+        hasNextPage: boolean;
+        hasPreviousPage: boolean;
+        startCursor: string | null;
+        endCursor: string | null;
+    };
+};
 
 export function useProducts({
     collectionHandle = storeConfig.allProductsCollectionHandle,
@@ -46,7 +52,8 @@ export function useProducts({
     const searchParams = useSearchParams();
 
     const searchParamsString = useMemo(() => {
-        return initialSearchParams ?? searchParams.toString();
+        const currentUrlParams = searchParams.toString();
+        return currentUrlParams !== initialSearchParams ? currentUrlParams : (initialSearchParams ?? currentUrlParams);
     }, [searchParams, initialSearchParams]);
 
     const query = useQuery<ProductsResponse, Error>({
