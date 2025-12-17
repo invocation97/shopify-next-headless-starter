@@ -1,6 +1,5 @@
 import { storeConfig } from "@/config/store";
 import { getCollectionFacets } from "@/lib/shopify/server/facets";
-import { CollectionFacetsQuery } from "@/lib/shopify/types/storefront.generated";
 import { Filter } from "@/lib/shopify/types/storefront.types";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
