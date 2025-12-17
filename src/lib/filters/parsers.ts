@@ -1,14 +1,33 @@
 import { parseAsFloat, parseAsString, parseAsBoolean, createParser } from "nuqs";
 import { z } from "zod";
-import { ProductCollectionSortKeys } from "../shopify/types/storefront.types";
 
-// Valid sort keys from GraphQL schema
+
+export const ProductCollectionSortKeys = {
+    /** Sort by the `best-selling` value. */
+    BestSelling: 'BEST_SELLING',
+    /** Sort by the `collection-default` value. */
+    CollectionDefault: 'COLLECTION_DEFAULT',
+    /** Sort by the `created` value. */
+    Created: 'CREATED',
+    /** Sort by the `id` value. */
+    Id: 'ID',
+    /** Sort by the `manual` value. */
+    Manual: 'MANUAL',
+    /** Sort by the `price` value. */
+    Price: 'PRICE',
+    /**
+     * Sort by relevance to the search terms when the `query` parameter is specified on the connection.
+     * Don't use this sort key when no search query is specified.
+     *
+     */
+    Relevance: 'RELEVANCE',
+    /** Sort by the `title` value. */
+    Title: 'TITLE'
+} as const;
+
 const validSortKeys = Object.values(ProductCollectionSortKeys) as [string, ...string[]];
-
-// Zod schema for sort key validation
 const SortKeySchema = z.enum(validSortKeys);
 
-// Custom parser for sort key with Zod validation
 export const parseAsSortKey = createParser({
     parse: (value: string | null): string | null => {
         if (!value) return null;
@@ -20,7 +39,6 @@ export const parseAsSortKey = createParser({
     clearOnDefault: true,
 });
 
-// Price parsers
 export const parseAsPriceMin = parseAsFloat.withOptions({
     clearOnDefault: true,
 });
@@ -29,18 +47,14 @@ export const parseAsPriceMax = parseAsFloat.withOptions({
     clearOnDefault: true,
 });
 
-// Boolean parser for reverse
 export const parseAsReverse = parseAsBoolean.withOptions({
     clearOnDefault: true,
 });
 
-// String parser for pagination cursor
 export const parseAsAfter = parseAsString.withOptions({
     clearOnDefault: true,
 });
 
-// Parser for filter values (array of strings)
-// Note: nuqs handles arrays automatically when multiple values are present
 export const parseAsFilterValue = parseAsString.withOptions({
     clearOnDefault: true,
 });

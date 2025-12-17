@@ -42,8 +42,6 @@ const ProductFilterSchema = z.object({
     }).optional(),
 });
 
-
-
 function parseFilterInput(inputJson: string): ProductFilter | null {
     try {
         const parsed = JSON.parse(inputJson);
@@ -60,7 +58,6 @@ export function parseSearchParamsToState(searchParams: URLSearchParams): FilterS
     const state: Partial<FilterState> = { selected };
 
     for (const [key, value] of searchParams.entries()) {
-        /* filter.<filterId> = <valueId> */
         if (key.startsWith("filter.")) {
             const existing = selected[key] || [];
             if (!existing.includes(value)) {
@@ -68,19 +65,15 @@ export function parseSearchParamsToState(searchParams: URLSearchParams): FilterS
             }
             continue;
         }
-        /* after = <cursor> */
         if (key === "after") {
             state.after = value;
         }
-        /* sortKey = <sortKey> */
         if (key === "sortKey") {
             state.sortKey = value;
         }
-        /* reverse = <boolean> */
         if (key === "reverse") {
             state.reverse = value === "true";
         }
-        /* priceMin = <number> */
         if (key === "priceMin") {
             const min = Number(value);
             if (!Number.isNaN(min)) {
@@ -90,7 +83,6 @@ export function parseSearchParamsToState(searchParams: URLSearchParams): FilterS
                 };
             }
         }
-        /* priceMax = <number> */
         if (key === "priceMax") {
             const max = Number(value);
             if (!Number.isNaN(max)) {
@@ -102,7 +94,6 @@ export function parseSearchParamsToState(searchParams: URLSearchParams): FilterS
         }
     }
 
-    // Validate with Zod schema
     const result = FilterStateSchema.safeParse(state);
     return result.success ? result.data : { selected };
 }
@@ -113,10 +104,10 @@ export function buildProductFiltersFromState(facets: Filter[], state: FilterStat
     if (state.price?.min !== undefined || state.price?.max !== undefined) {
         out.push({
             price: {
-                min: state.price?.min,
-                max: state.price?.max,
+                min: state.price.min,
+                max: state.price.max,
             }
-        })
+        });
     }
 
     for (const facet of facets) {
