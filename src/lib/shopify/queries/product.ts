@@ -39,3 +39,52 @@ query getProductRecommendationsQuery($productId: ID!) {
 }
     ${PRODUCT_FRAGMENT}
 `;
+
+export const GET_COLLECTION_PRODUCTS_QUERY = `#graphql
+query CollectionProducts(
+  $handle: String!
+  $first: Int!
+  $after: String
+  $filters: [ProductFilter!]
+  $sortKey: ProductCollectionSortKeys
+  $reverse: Boolean
+) {
+  collection(handle: $handle) {
+    handle
+    title
+    products(
+      first: $first
+      after: $after
+      filters: $filters
+      sortKey: $sortKey
+      reverse: $reverse
+    ) {
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
+      }
+      edges {
+        cursor
+        node {
+          id
+          handle
+          title
+          availableForSale
+          featuredImage {
+            url
+            altText
+            width
+            height
+          }
+          priceRange {
+            minVariantPrice { amount currencyCode }
+            maxVariantPrice { amount currencyCode }
+          }
+        }
+      }
+    }
+  }
+}
+`;
