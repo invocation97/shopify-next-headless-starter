@@ -47,7 +47,7 @@ export function ProductGrid({ products, className }: ProductGridProps) {
 
     if (products.length === 0) {
         return (
-            <div className="flex min-h-[400px] items-center justify-center rounded-lg border border-dashed">
+            <div className={cn("flex min-h-[400px] items-center justify-center rounded-lg border border-dashed", className)}>
                 <div className="text-center">
                     <p className="text-lg font-semibold text-muted-foreground">No products found</p>
                     <p className="mt-2 text-sm text-muted-foreground">
