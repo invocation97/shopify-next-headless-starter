@@ -5,6 +5,7 @@ export const storeConfig: StoreConfig = StoreConfigSchema.parse({
   allProductsCollectionHandle:
     process.env.ALL_PRODUCTS_COLLECTION_HANDLE,
   productsPerPage: process.env.PRODUCTS_PER_PAGE,
+  collectionsPerPage: process.env.COLLECTIONS_PER_PAGE,
   enableFacets: process.env.ENABLE_FACETS,
   branding: {
     name: process.env.BRANDING_NAME,

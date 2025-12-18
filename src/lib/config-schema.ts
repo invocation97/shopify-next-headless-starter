@@ -35,6 +35,9 @@ export const StoreConfigSchema = z.object({
     /** Products per page */
     productsPerPage: z.coerce.number().int().min(1).max(48).default(24),
 
+    /** Collections per page */
+    collectionsPerPage: z.coerce.number().int().min(1).max(48).default(12),
+
     /** Enable product facets (filters) */
     enableFacets: z.coerce.boolean().default(true),
 
