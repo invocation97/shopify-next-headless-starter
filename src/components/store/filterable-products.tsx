@@ -111,6 +111,7 @@ export function FilterableProducts({
                         <ProductPagination
                             hasNextPage={data.pageInfo.hasNextPage}
                             hasPreviousPage={data.pageInfo.hasPreviousPage}
+                            startCursor={data.pageInfo.startCursor ?? null}
                             endCursor={data.pageInfo.endCursor ?? null}
                         />
                     )}

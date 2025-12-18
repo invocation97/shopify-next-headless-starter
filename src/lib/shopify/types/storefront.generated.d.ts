@@ -29,6 +29,28 @@ export type GetStoreBrandingQuery = { shop: (
     )> }
   ) };
 
+export type ListCollectionsQueryVariables = StorefrontTypes.Exact<{
+  first?: StorefrontTypes.InputMaybe<StorefrontTypes.Scalars['Int']['input']>;
+  last?: StorefrontTypes.InputMaybe<StorefrontTypes.Scalars['Int']['input']>;
+  after?: StorefrontTypes.InputMaybe<StorefrontTypes.Scalars['String']['input']>;
+  before?: StorefrontTypes.InputMaybe<StorefrontTypes.Scalars['String']['input']>;
+  query?: StorefrontTypes.InputMaybe<StorefrontTypes.Scalars['String']['input']>;
+  sortKey?: StorefrontTypes.InputMaybe<StorefrontTypes.CollectionSortKeys>;
+  reverse?: StorefrontTypes.InputMaybe<StorefrontTypes.Scalars['Boolean']['input']>;
+}>;
+
+
+export type ListCollectionsQuery = { collections: (
+    Pick<StorefrontTypes.CollectionConnection, 'totalCount'>
+    & { edges: Array<(
+      Pick<StorefrontTypes.CollectionEdge, 'cursor'>
+      & { node: (
+        Pick<StorefrontTypes.Collection, 'id' | 'handle' | 'title' | 'description'>
+        & { image?: StorefrontTypes.Maybe<Pick<StorefrontTypes.Image, 'url' | 'altText'>> }
+      ) }
+    )>, pageInfo: Pick<StorefrontTypes.PageInfo, 'hasNextPage' | 'hasPreviousPage' | 'startCursor' | 'endCursor'> }
+  ) };
+
 export type CollectionFacetsQueryVariables = StorefrontTypes.Exact<{
   handle: StorefrontTypes.Scalars['String']['input'];
 }>;
@@ -124,6 +146,7 @@ export type ShopQueryQuery = { shop: (
 
 interface GeneratedQueryTypes {
   "\n#graphql\n query GetStoreBranding {\n    shop {\n      name\n      brand {\n        slogan\n        shortDescription\n        colors {\n          primary {\n            background\n            foreground\n          }\n          secondary {\n            background\n            foreground\n          }\n        }\n        logo {\n          image {\n            url\n            altText\n          }\n        }\n        squareLogo {\n          image {\n            url\n            altText\n          }\n        }\n        coverImage {\n          image {\n            url\n            altText\n          }\n        }\n      }\n    }\n  }\n": {return: GetStoreBrandingQuery, variables: GetStoreBrandingQueryVariables},
+  "\n#graphql\nquery ListCollections(\n  $first: Int\n  $last: Int\n  $after: String\n  $before: String\n  $query: String\n  $sortKey: CollectionSortKeys\n  $reverse: Boolean\n) {\n  collections(\n    first: $first\n    last: $last\n    after: $after\n    before: $before\n    query: $query\n    sortKey: $sortKey\n    reverse: $reverse\n  ) {\n    edges {\n      cursor\n      node {\n        id\n        handle\n        title\n        description\n        image {\n          url\n          altText\n        }\n      }\n    }\n    pageInfo {\n      hasNextPage\n      hasPreviousPage\n      startCursor\n      endCursor\n    }\n    totalCount\n  }\n}\n": {return: ListCollectionsQuery, variables: ListCollectionsQueryVariables},
   "\n  #graphql\n  query CollectionFacets($handle: String!) {\n    collection(handle: $handle) {\n    id\n    handle\n      products(first: 1) {\n        filters {\n          id\n          label\n          type\n          values {\n            id\n            label\n            count\n            input\n          }\n        }\n      }\n    }\n  }\n": {return: CollectionFacetsQuery, variables: CollectionFacetsQueryVariables},
   "\n#graphql\n  query GetProductQuery($handle: String!) {\n    product(handle: $handle) {\n      ...product\n    }\n  }\n  \n#graphql\n   fragment product on Product {\n    id\n    handle\n    availableForSale\n    title\n    description\n    descriptionHtml\n    options {\n      id\n      name\n      values\n    }\n    priceRange {\n      maxVariantPrice {\n        amount\n        currencyCode\n      }\n      minVariantPrice {\n        amount\n        currencyCode\n      }\n    }\n    compareAtPriceRange {\n      maxVariantPrice {\n        amount\n        currencyCode\n      }\n    }\n    variants(first: 250) {\n      edges {\n        node {\n          id\n          title\n          availableForSale\n          selectedOptions {\n            name\n            value\n          }\n          price {\n            amount\n            currencyCode\n          }\n          compareAtPrice {\n            amount\n            currencyCode\n          }\n        }\n      }\n    }\n    featuredImage {\n      ...image\n    }\n    images(first: 20) {\n      edges {\n        node {\n          ...image\n        }\n      }\n    }\n    seo {\n      ...seo\n    }\n    tags\n    updatedAt\n    vendor\n    collections(first: 100) {\n      nodes {\n        title\n        products(first: 100) {\n          edges {\n            node {\n              title\n              vendor\n            }\n          }\n        }\n      }\n    }\n  }\n    \n#graphql\n  fragment image on Image {\n    url\n    altText\n    width\n    height\n  }\n\n    \n#graphql\n  fragment seo on SEO {\n    description\n    title\n  }\n\n\n": {return: GetProductQueryQuery, variables: GetProductQueryQueryVariables},
   "\n#graphql\nquery getProductsQuery($sortKey: ProductSortKeys, $reverse: Boolean, $query: String, $cursor: String) {\n    products(sortKey: $sortKey, reverse: $reverse, query: $query, after: $cursor) {\n        pageInfo {\n            hasNextPage\n            hasPreviousPage\n            startCursor\n            endCursor\n        }\n        edges {\n            node {\n                ...product\n            }\n        }\n    }\n}\n    \n#graphql\n   fragment product on Product {\n    id\n    handle\n    availableForSale\n    title\n    description\n    descriptionHtml\n    options {\n      id\n      name\n      values\n    }\n    priceRange {\n      maxVariantPrice {\n        amount\n        currencyCode\n      }\n      minVariantPrice {\n        amount\n        currencyCode\n      }\n    }\n    compareAtPriceRange {\n      maxVariantPrice {\n        amount\n        currencyCode\n      }\n    }\n    variants(first: 250) {\n      edges {\n        node {\n          id\n          title\n          availableForSale\n          selectedOptions {\n            name\n            value\n          }\n          price {\n            amount\n            currencyCode\n          }\n          compareAtPrice {\n            amount\n            currencyCode\n          }\n        }\n      }\n    }\n    featuredImage {\n      ...image\n    }\n    images(first: 20) {\n      edges {\n        node {\n          ...image\n        }\n      }\n    }\n    seo {\n      ...seo\n    }\n    tags\n    updatedAt\n    vendor\n    collections(first: 100) {\n      nodes {\n        title\n        products(first: 100) {\n          edges {\n            node {\n              title\n              vendor\n            }\n          }\n        }\n      }\n    }\n  }\n    \n#graphql\n  fragment image on Image {\n    url\n    altText\n    width\n    height\n  }\n\n    \n#graphql\n  fragment seo on SEO {\n    description\n    title\n  }\n\n\n": {return: GetProductsQueryQuery, variables: GetProductsQueryQueryVariables},
