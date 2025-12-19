@@ -1,10 +1,7 @@
 "use client";
 
-import { storeConfig } from "@/config/store";
-import { Branding } from "@/lib/shopify/server/branding";
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { CartSheetTrigger } from "@/components/store/cart-sheet-trigger";
+import { Button } from "@/components/ui/button";
 import {
     NavigationMenu,
     NavigationMenuContent,
@@ -13,19 +10,22 @@ import {
     NavigationMenuList,
     NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
-import { Button } from "@/components/ui/button";
-import { IconShoppingCart, IconUser, IconSearch } from "@tabler/icons-react";
+import { storeConfig } from "@/config/store";
+import { Branding } from "@/lib/shopify/server/branding";
+import { IconSearch, IconUser } from "@tabler/icons-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export function Header({ brand }: { brand: Branding }) {
     const router = useRouter();
 
-    const renderMenuItem = (item: { label: string; href: string; items?: Array<{ label: string; href: string; items?: any[] }> }) => {
+    const renderMenuItem = (item: { label: string; href: string; items?: Array<{ label: string; href: string; items?: unknown[] }> }) => {
         if (item.items && item.items.length > 0) {
             return (
                 <NavigationMenuItem key={item.label}>
                     <NavigationMenuTrigger
-                        onClick={(e) => {
-                            // Navigate on click while preserving submenu hover behavior
+                        onClick={() => {
                             router.push(item.href);
                         }}
                         className="cursor-pointer"
@@ -81,7 +81,7 @@ export function Header({ brand }: { brand: Branding }) {
                     </div>
                 </div>
             ) : null}
-
+            {/* Header */}
             <div className="w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
                 <div className="container mx-auto flex h-16 items-center justify-between px-4">
                     <Link href="/" className="flex shrink-0 items-center gap-2">
@@ -108,9 +108,7 @@ export function Header({ brand }: { brand: Branding }) {
                         <Button size="icon" variant="ghost" aria-label="Account">
                             <IconUser className="size-5" />
                         </Button>
-                        <Button size="icon" variant="ghost" aria-label="Shopping Cart">
-                            <IconShoppingCart className="size-5" />
-                        </Button>
+                        <CartSheetTrigger />
                     </div>
                 </div>
             </div>
