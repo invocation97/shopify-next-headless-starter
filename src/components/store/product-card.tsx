@@ -1,9 +1,9 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
 import { Product } from "@/lib/shopify/types/storefront.types"
 import { formatPrice } from "@/lib/utils"
+import { AddToCartButton } from "@/components/store/add-to-cart-button"
 
 
 type ProductCardProps = {
@@ -48,13 +48,10 @@ export function ProductCard({ product, fetchPriority = "auto", className }: Prod
                 <p className="mt-2 text-lg font-semibold">{price}</p>
 
                 <CardFooter className="mt-auto p-0 pt-4">
-                    <Button
-                        className="w-full"
-                        disabled={!product.availableForSale}
-                        variant={product.availableForSale ? "default" : "secondary"}
-                    >
-                        {product.availableForSale ? "Add to Cart" : "Out of Stock"}
-                    </Button>
+                    <AddToCartButton
+                        variantId={product.variants?.edges?.[0]?.node?.id}
+                        disabled={!product.variants?.edges?.[0]?.node?.id}
+                    />
                 </CardFooter>
             </div>
         </Card>

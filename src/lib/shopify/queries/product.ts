@@ -82,6 +82,13 @@ query CollectionProducts(
             minVariantPrice { amount currencyCode }
             maxVariantPrice { amount currencyCode }
           }
+          variants(first: 1) {
+            edges {
+              node {
+                id
+              }
+            }
+          }
         }
       }
     }
