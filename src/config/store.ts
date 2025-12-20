@@ -101,6 +101,13 @@ export const storeConfig: StoreConfig = StoreConfigSchema.parse({
   cart: {
     cartCookieName: process.env.CART_COOKIE_NAME,
     cartCookieMaxAge: process.env.CART_COOKIE_MAX_AGE,
-
-  }
+  },
+  productPage: {
+    enableFaqs: process.env.PRODUCT_PAGE_ENABLE_FAQS,
+    enableVideos: process.env.PRODUCT_PAGE_ENABLE_VIDEOS,
+    enableRecommendations: process.env.PRODUCT_PAGE_ENABLE_RECOMMENDATIONS,
+    enableReviews: process.env.PRODUCT_PAGE_ENABLE_REVIEWS,
+    enableAdditionalDetails: process.env.PRODUCT_PAGE_ENABLE_ADDITIONAL_DETAILS,
+    sectionsOrder: process.env.PRODUCT_PAGE_SECTIONS_ORDER,
+  },
 });

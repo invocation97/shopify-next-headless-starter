@@ -3,13 +3,13 @@
 import Image from "next/image";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { useCart } from "@/hooks/use-cart";
 import type { MappedCart } from "@/lib/utils/mappers";
-import { IconMinus, IconPlus, IconTrash } from "@tabler/icons-react";
+import { IconTrash } from "@tabler/icons-react";
 import { formatPrice } from "@/lib/utils";
 import { CartEmpty } from "@/components/store/cart-empty";
+import { QuantitySelector } from "@/components/store/quantity-selector";
 
 type CartContentProps = {
     cart: MappedCart | null;
@@ -142,48 +142,12 @@ export function CartContent({
                                 </div>
 
                                 <div className="flex items-center justify-between">
-                                    <div className="flex items-center gap-2">
-                                        <Button
-                                            variant="outline"
-                                            size="icon-sm"
-                                            onClick={() =>
-                                                handleQuantityChange(line.id, line.quantity - 1)
-                                            }
-                                            disabled={
-                                                isUpdating ||
-                                                isRemoving ||
-                                                line.quantity <= 1
-                                            }
-                                        >
-                                            <IconMinus size={16} />
-                                            <span className="sr-only">Decrease quantity</span>
-                                        </Button>
-                                        <Input
-                                            type="text"
-                                            inputMode="numeric"
-                                            pattern="[0-9]*"
-                                            min="1"
-                                            value={line.quantity.toString()}
-                                            onChange={(e) => handleQuantityChange(line.id, parseInt(e.target.value, 10))}
-                                            disabled={
-                                                isUpdating || isRemoving
-                                            }
-                                            className="w-16 text-center"
-                                        />
-                                        <Button
-                                            variant="outline"
-                                            size="icon-sm"
-                                            onClick={() =>
-                                                handleQuantityChange(line.id, line.quantity + 1)
-                                            }
-                                            disabled={
-                                                isUpdating || isRemoving
-                                            }
-                                        >
-                                            <IconPlus size={16} />
-                                            <span className="sr-only">Increase quantity</span>
-                                        </Button>
-                                    </div>
+                                    <QuantitySelector
+                                        value={line.quantity}
+                                        onChange={(newQuantity) => handleQuantityChange(line.id, newQuantity)}
+                                        min={1}
+                                        disabled={isUpdating || isRemoving}
+                                    />
                                     <div className="text-right">
                                         {line.merchandise.price && (
                                             <>

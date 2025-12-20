@@ -35,6 +35,9 @@ export const StoreConfigSchema = z.object({
     /** Products per page */
     productsPerPage: z.coerce.number().int().min(1).max(48).default(24),
 
+    productToPrerender: z.coerce.number().int().min(1).max(9999).default(100).describe("Number of products to prerender"),
+    productPrerenderRefreshInterval: z.coerce.number().int().min(1).max(86400).default(3600).describe("Refresh interval for product prerender in seconds"),
+
     /** Collections per page */
     collectionsPerPage: z.coerce.number().int().min(1).max(48).default(12),
 
@@ -76,7 +79,30 @@ export const StoreConfigSchema = z.object({
     cart: z.object({
         cartCookieName: z.string().default("next-shopify-starter-template-cart-cookie"),
         cartCookieMaxAge: z.coerce.number().int().min(0).default(60 * 60 * 24 * 30), // 30 days
-    })
+    }),
+
+    productPage: z.object({
+        enableFaqs: z.coerce.boolean().default(false),
+        enableVideos: z.coerce.boolean().default(false),
+        enableRecommendations: z.coerce.boolean().default(true),
+        enableReviews: z.coerce.boolean().default(false),
+        enableAdditionalDetails: z.coerce.boolean().default(false),
+        sectionsOrder: z.array(z.enum([
+            "description",
+            "faqs",
+            "videos",
+            "recommendations",
+            "reviews",
+            "additionalDetails",
+        ])).default(["description", "recommendations"]),
+    }).default({
+        enableFaqs: false,
+        enableVideos: false,
+        enableRecommendations: true,
+        enableReviews: false,
+        enableAdditionalDetails: false,
+        sectionsOrder: ["description", "recommendations"],
+    }),
 });
 
 export type StoreConfig = z.infer<typeof StoreConfigSchema>;

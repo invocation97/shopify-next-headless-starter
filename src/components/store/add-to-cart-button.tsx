@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/hooks/use-cart";
 import { useCartSheet } from "@/components/store/cart-sheet-context";

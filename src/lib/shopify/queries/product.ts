@@ -2,9 +2,21 @@ import { PRODUCT_FRAGMENT } from "@/lib/shopify/fragments/product";
 
 export const GET_PRODUCT_QUERY = `
 #graphql
-  query GetProductQuery($handle: String!) {
+  query Product($handle: String!) {
     product(handle: $handle) {
       ...product
+      metafields(identifiers: [
+        {namespace: "custom", key: "faqs"}
+        {namespace: "custom", key: "videos"}
+        {namespace: "custom", key: "additional_details"}
+        {namespace: "custom", key: "specifications"}
+      ]) {
+        id
+        namespace
+        key
+        value
+        type
+      }
     }
   }
   ${PRODUCT_FRAGMENT}
@@ -94,4 +106,24 @@ query CollectionProducts(
     }
   }
 }
+`;
+
+export const PRODUCT_HANDLES_QUERY = `
+#graphql
+  query ProductHandles($handle: String!, $first: Int!, $after: String) {
+    collection(handle: $handle) {
+      products(first: $first, after: $after) {
+        edges {
+          node {
+            handle
+          }
+          cursor
+        }
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
+      }
+    }
+  }
 `;
