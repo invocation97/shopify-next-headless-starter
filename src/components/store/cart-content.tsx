@@ -159,15 +159,12 @@ export function CartContent({
                                             <span className="sr-only">Decrease quantity</span>
                                         </Button>
                                         <Input
-                                            type="number"
+                                            type="text"
+                                            inputMode="numeric"
+                                            pattern="[0-9]*"
                                             min="1"
-                                            value={line.quantity}
-                                            onChange={(e) => {
-                                                const value = parseInt(e.target.value, 10);
-                                                if (!Number.isNaN(value) && value > 0) {
-                                                    handleQuantityChange(line.id, value);
-                                                }
-                                            }}
+                                            value={line.quantity.toString()}
+                                            onChange={(e) => handleQuantityChange(line.id, parseInt(e.target.value, 10))}
                                             disabled={
                                                 isUpdating || isRemoving
                                             }
