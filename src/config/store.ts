@@ -98,4 +98,9 @@ export const storeConfig: StoreConfig = StoreConfigSchema.parse({
       ],
     },
   ],
+  cart: {
+    cartCookieName: process.env.CART_COOKIE_NAME,
+    cartCookieMaxAge: process.env.CART_COOKIE_MAX_AGE,
+
+  }
 });

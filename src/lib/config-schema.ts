@@ -71,6 +71,11 @@ export const StoreConfigSchema = z.object({
         enabled: z.coerce.boolean().default(true),
         message: z.string().default("Check out our latest products"),
         link: z.string().default("/collections/all-products"),
+    }),
+
+    cart: z.object({
+        cartCookieName: z.string().default("next-shopify-starter-template-cart-cookie"),
+        cartCookieMaxAge: z.coerce.number().int().min(0).default(60 * 60 * 24 * 30), // 30 days
     })
 });
 

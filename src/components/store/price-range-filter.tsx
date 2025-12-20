@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { startTransition, useEffect, useRef, useState } from "react";
 import {
     Accordion,
     AccordionContent,
@@ -43,11 +43,28 @@ export function PriceRangeFilter({
     const [localMax, setLocalMax] = useState<number | undefined>(priceMax);
 
     const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+    const prevPropsRef = useRef({ priceMin, priceMax });
+    const isInternalChangeRef = useRef(false);
 
     useEffect(() => {
-        setLocalMin(priceMin);
-        setLocalMax(priceMax);
-    }, [priceMin, priceMax]);
+        const propsChanged =
+            prevPropsRef.current.priceMin !== priceMin ||
+            prevPropsRef.current.priceMax !== priceMax;
+
+        if (propsChanged && !isInternalChangeRef.current) {
+            if (localMin !== priceMin || localMax !== priceMax) {
+                startTransition(() => {
+                    setLocalMin(priceMin);
+                    setLocalMax(priceMax);
+                });
+            }
+        }
+
+        if (propsChanged) {
+            isInternalChangeRef.current = false;
+            prevPropsRef.current = { priceMin, priceMax };
+        }
+    }, [priceMin, priceMax, localMin, localMax]);
 
     const debouncedPriceChange = (min?: number, max?: number) => {
         if (debounceTimerRef.current) {
@@ -69,6 +86,7 @@ export function PriceRangeFilter({
         const newMin = values[0] !== minPrice ? values[0] : undefined;
         const newMax = values[1] !== maxPrice ? values[1] : undefined;
 
+        isInternalChangeRef.current = true;
         setLocalMin(newMin);
         setLocalMax(newMax);
 
@@ -79,7 +97,7 @@ export function PriceRangeFilter({
         const value = e.target.value.trim();
 
         if (value === "") {
-            // Allow empty input while typing
+            isInternalChangeRef.current = true;
             setLocalMin(undefined);
             debouncedPriceChange(undefined, localMax);
             return;
@@ -87,15 +105,15 @@ export function PriceRangeFilter({
 
         const numValue = Number(value);
         if (Number.isNaN(numValue)) {
-            return; // Invalid input, ignore
+            return;
         }
 
         const clampedValue = Math.max(minPrice, Math.min(maxPrice, numValue));
 
-        // Ensure min doesn't exceed max
         const finalMin =
             localMax !== undefined ? Math.min(clampedValue, localMax) : clampedValue;
 
+        isInternalChangeRef.current = true;
         setLocalMin(finalMin);
         debouncedPriceChange(finalMin, localMax);
     };
@@ -104,7 +122,7 @@ export function PriceRangeFilter({
         const value = e.target.value.trim();
 
         if (value === "") {
-            // Allow empty input while typing
+            isInternalChangeRef.current = true;
             setLocalMax(undefined);
             debouncedPriceChange(localMin, undefined);
             return;
@@ -112,15 +130,15 @@ export function PriceRangeFilter({
 
         const numValue = Number(value);
         if (Number.isNaN(numValue)) {
-            return; // Invalid input, ignore
+            return;
         }
 
         const clampedValue = Math.max(minPrice, Math.min(maxPrice, numValue));
 
-        // Ensure max doesn't go below min
         const finalMax =
             localMin !== undefined ? Math.max(clampedValue, localMin) : clampedValue;
 
+        isInternalChangeRef.current = true;
         setLocalMax(finalMax);
         debouncedPriceChange(localMin, finalMax);
     };
@@ -210,6 +228,7 @@ export function PriceRangeFilter({
                             <button
                                 type="button"
                                 onClick={() => {
+                                    isInternalChangeRef.current = true;
                                     setLocalMin(undefined);
                                     setLocalMax(undefined);
                                     onPriceChange(undefined, undefined);
